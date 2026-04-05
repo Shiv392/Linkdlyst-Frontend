@@ -36,7 +36,7 @@ Mobile-first approach
 Works across devices (mobile, tablet, desktop)
 ⚙️ Setup & Installation
 # Clone repo
-git clone https://github.com/your-username/linklyst-frontend.git
+git clone https://github.com/Shiv392/Linkdlyst-Frontend
 
 # Install dependencies
 npm install
