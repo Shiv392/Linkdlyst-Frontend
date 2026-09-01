@@ -1,0 +1,13 @@
+<input
+  [id]="id"
+  [name]="name"
+  [type]="type"
+  [value]="value"
+  [disabled]="disabled"
+  [placeholder]="placeholder"
+  [attr.aria-label]="ariaLabel || null"
+  [attr.autocomplete]="autocomplete || null"
+  [class]="inputClass"
+  (input)="updateValue($event)"
+  (blur)="markAsTouched()"
+/>
