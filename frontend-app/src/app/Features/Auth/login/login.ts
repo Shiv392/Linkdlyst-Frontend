@@ -1,8 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommonButton } from '../../../Shared/Components/common-button/common-button';
 import { CommonInput } from '../../../Shared/Components/common-input/common-input';
+import { LoginService } from '../Services/Login.service';
+import { Subject, takeUntil } from 'rxjs';
+import { LoginResponse } from '../Models/LoginResponse';
 
 @Component({
   selector: 'app-login',
@@ -10,8 +13,10 @@ import { CommonInput } from '../../../Shared/Components/common-input/common-inpu
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class Login {
+export class Login implements OnDestroy {
+
   private readonly fb = inject(FormBuilder).nonNullable;
+  private loginService = inject(LoginService);
 
   readonly loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -20,6 +25,8 @@ export class Login {
 
   submitted = false;
   showPassword = false;
+
+  public subject$ = new Subject<void>();
 
   inputClass(control: AbstractControl): string {
     const hasError = control.invalid && (control.touched || this.submitted);
@@ -44,5 +51,20 @@ export class Login {
     }
 
     // Authentication will be connected to LoginService when the API contract is available.
+    const apibody = {
+      email : this.loginForm.value.email?.trim()?.toLowerCase() || '',
+      password : this.loginForm.value.password?.trim() || ''
+    }
+    this.loginService.loginUser(apibody).pipe(takeUntil(this.subject$))
+    .subscribe((response: LoginResponse)=>{
+      if(response.success) {
+        console.log('Successful login:', response);
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.subject$.next();
+    this.subject$.complete();
   }
 }
