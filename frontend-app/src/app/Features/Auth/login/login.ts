@@ -5,7 +5,7 @@ import { CommonButton } from '../../../Shared/Components/common-button/common-bu
 import { CommonInput } from '../../../Shared/Components/common-input/common-input';
 import { LoginService } from '../Services/Login.service';
 import { Subject, takeUntil } from 'rxjs';
-import { LoginResponse } from '../Models/LoginResponse';
+import { loginApiResponse } from '../Models/login';
 
 @Component({
   selector: 'app-login',
@@ -56,7 +56,7 @@ export class Login implements OnDestroy {
       password : this.loginForm.value.password?.trim() || ''
     }
     this.loginService.loginUser(apibody).pipe(takeUntil(this.subject$))
-    .subscribe((response: LoginResponse)=>{
+    .subscribe((response: loginApiResponse)=>{
       if(response.success) {
         console.log('Successful login:', response);
       }
