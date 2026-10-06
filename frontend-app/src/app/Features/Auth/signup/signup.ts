@@ -7,6 +7,8 @@ import { SignupService } from '../Services/Signup.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs';
 import { signupResponse } from '../Models/signup';
+import { CommonLoaderService } from '../../../Shared/Services/CommonLoaderService.service';
+import { NotificationService } from '../../../Shared/Services/Notification.service';
 
 @Component({
   selector: 'app-signup',
@@ -18,6 +20,8 @@ export class Signup implements OnDestroy {
 
   private readonly fb = inject(FormBuilder).nonNullable;
   private signupService = inject(SignupService);
+  private commonLoaderService = inject(CommonLoaderService);
+  private commonNotificationService = inject(NotificationService);
 
   public signupForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
@@ -25,8 +29,8 @@ export class Signup implements OnDestroy {
     password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(128)]],
   });
 
-  submitted = false;
-  showPassword = false;
+  public submitted : boolean = false;
+  public showPassword : boolean = false;
 
   public subject$ = new Subject<void>();
 
@@ -52,6 +56,7 @@ export class Signup implements OnDestroy {
       return;
     }
 
+    this.commonLoaderService.showLoader();
     const apibody = {
       name: this.signupForm.value.name?.trim() || '',
       email: this.signupForm.value.email?.trim()?.toLowerCase() || '',
@@ -61,8 +66,18 @@ export class Signup implements OnDestroy {
     this.signupService.signupUser(apibody)
     .pipe(takeUntil(this.subject$))
     .subscribe((response : signupResponse) => {
+      this.commonLoaderService.hideLoader();
+
       if (response.success) {
-        console.log('Successful signup:', response);
+        this.commonNotificationService.notificationSubject$.next({
+          type : 'info',
+          summary : 'Success',
+          detail : response.message,
+          sticky : true
+        });
+
+        this.signupForm.reset();
+        this.signupForm.markAsUntouched();
       }
     });
   }

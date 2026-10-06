@@ -7,4 +7,5 @@ export interface NotificationEvent{
     type : 'success' | 'error' | 'info' | 'warn';
     summary : string;
     detail : string;
+    sticky? : boolean
 }
