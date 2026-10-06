@@ -1,0 +1,40 @@
+@if (showLoader()) {
+<div class="fixed inset-0 z-[9999]
+           flex items-center justify-center
+           bg-gray-50/90 backdrop-blur-[2px]">
+
+    <div class="w-[280px] sm:w-[360px]">
+
+        <!-- Logo -->
+        <div class="mb-8 text-center">
+            <div class="mb-4 flex items-center justify-center gap-2">
+                <i class="pi pi-link text-2xl text-red-600"></i>
+
+                <span class="text-2xl font-bold tracking-tight text-red-600">
+                    Linkdlyst
+                </span>
+            </div>
+        </div>
+
+        <!-- Step Progress -->
+        <div class="flex items-center gap-1.5">
+
+            @for (step of [1,2,3,4,5,6,7,8]; track step) {
+            <div class="loader-step h-1.5 flex-1 overflow-hidden rounded-full bg-red-100">
+                <div class="loader-fill h-full rounded-full bg-red-600"></div>
+            </div>
+            }
+
+        </div>
+
+        <!-- Loading text -->
+        <div class="mt-4 text-center">
+            <span class="text-xs font-medium tracking-wide text-gray-400">
+                Please wait...
+            </span>
+        </div>
+
+    </div>
+
+</div>
+}

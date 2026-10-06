@@ -1,8 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CommonButton } from '../../../Shared/Components/common-button/common-button';
 import { CommonInput } from '../../../Shared/Components/common-input/common-input';
+import { SignupService } from '../Services/Signup.service';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs';
+import { signupResponse } from '../Models/signup';
 
 @Component({
   selector: 'app-signup',
@@ -10,8 +14,10 @@ import { CommonInput } from '../../../Shared/Components/common-input/common-inpu
   templateUrl: './signup.html',
   styleUrl: './signup.css',
 })
-export class Signup {
+export class Signup implements OnDestroy {
+
   private readonly fb = inject(FormBuilder).nonNullable;
+  private signupService = inject(SignupService);
 
   public signupForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
@@ -21,6 +27,8 @@ export class Signup {
 
   submitted = false;
   showPassword = false;
+
+  public subject$ = new Subject<void>();
 
   inputClass(control: AbstractControl): string {
     const hasError = control.invalid && (control.touched || this.submitted);
@@ -44,6 +52,23 @@ export class Signup {
       return;
     }
 
-    // Registration will be connected to the authentication API when available.
+    const apibody = {
+      name: this.signupForm.value.name?.trim() || '',
+      email: this.signupForm.value.email?.trim()?.toLowerCase() || '',
+      password: this.signupForm.value.password?.trim() || '',
+    }
+
+    this.signupService.signupUser(apibody)
+    .pipe(takeUntil(this.subject$))
+    .subscribe((response : signupResponse) => {
+      if (response.success) {
+        console.log('Successful signup:', response);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subject$.next();
+    this.subject$.complete();
   }
 }
