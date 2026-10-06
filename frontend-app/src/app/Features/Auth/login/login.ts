@@ -6,6 +6,7 @@ import { CommonInput } from '../../../Shared/Components/common-input/common-inpu
 import { LoginService } from '../Services/Login.service';
 import { Subject, takeUntil } from 'rxjs';
 import { loginApiResponse } from '../Models/login';
+import { CommonLoaderService } from '../../../Shared/Services/CommonLoaderService.service';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class Login implements OnDestroy {
 
   private readonly fb = inject(FormBuilder).nonNullable;
   private loginService = inject(LoginService);
+  private loaderService = inject(CommonLoaderService);
 
   readonly loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -27,6 +29,13 @@ export class Login implements OnDestroy {
   showPassword = false;
 
   public subject$ = new Subject<void>();
+
+  constructor() {
+    this.loaderService.showLoader();
+    setTimeout(()=>{
+      this.loaderService.hideLoader();
+    },3000)
+  }
 
   inputClass(control: AbstractControl): string {
     const hasError = control.invalid && (control.touched || this.submitted);
