@@ -1,0 +1,146 @@
+<div class="links-page min-h-screen overflow-x-clip bg-[#fafafa] text-slate-900">
+	<header class="relative z-10 mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
+		<a routerLink="/home" class="flex items-center gap-3 text-inherit no-underline" aria-label="LinkedList home">
+			<span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d64545] text-white shadow-lg shadow-red-200">
+				<i class="pi pi-link text-lg" aria-hidden="true"></i>
+			</span>
+			<span>
+				<span class="block text-xl font-bold tracking-tight">Linked<span class="text-[#d64545]">List</span></span>
+				<span class="block text-[10px] font-medium uppercase tracking-[0.18em] text-slate-400">URL Intelligence</span>
+			</span>
+		</a>
+
+		<nav class="hidden items-center gap-7 md:flex" aria-label="Main navigation">
+			<a routerLink="/home" class="text-sm font-medium text-slate-500 transition hover:text-[#d64545]">Home</a>
+			<a routerLink="/links" aria-current="page" class="text-sm font-semibold text-[#d64545]">My links</a>
+		</nav>
+
+		<a routerLink="/auth/login" class="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 no-underline transition hover:bg-slate-100">
+			Sign in
+		</a>
+	</header>
+
+	<main class="relative z-10 mx-auto max-w-7xl px-5 pb-16 pt-7 sm:px-8 sm:pt-10">
+		<section class="links-intro">
+			<div class="mb-3 inline-flex items-center gap-2 rounded-full border border-red-100 bg-red-50 px-3 py-1.5 text-xs font-semibold text-[#d64545]">
+				<i class="pi pi-sparkles" aria-hidden="true"></i>
+				Your workspace
+			</div>
+			<div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+				<div>
+					<h1 class="text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">Your links</h1>
+					<p class="mt-2 max-w-xl text-sm leading-6 text-slate-500">Create, organize, and keep an eye on every link you share.</p>
+				</div>
+				<div class="flex items-center gap-2 text-sm text-slate-500">
+					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#d64545] shadow-sm ring-1 ring-slate-200">
+						<i class="pi pi-chart-line" aria-hidden="true"></i>
+					</span>
+					<span><strong class="font-bold text-slate-900">41,689</strong> total clicks</span>
+				</div>
+			</div>
+		</section>
+
+		<section class="mt-8 rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-[0_12px_40px_rgba(15,23,42,0.05)] sm:px-6" aria-labelledby="shorten-heading">
+			<div class="mb-1 flex items-center gap-2">
+				<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50 text-[#d64545]"><i class="pi pi-bolt" aria-hidden="true"></i></span>
+				<h2 id="shorten-heading" class="text-base font-bold text-slate-900">Shorten a new link</h2>
+			</div>
+			<app-url-shortner-input></app-url-shortner-input>
+		</section>
+
+		<section class="mt-9" aria-labelledby="links-heading">
+			<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+				<div>
+					<h2 id="links-heading" class="text-xl font-bold tracking-tight text-slate-900">All links <span class="ml-1 text-sm font-medium text-slate-400">{{ filteredLinks.length }}</span></h2>
+					<p class="mt-1 text-sm text-slate-500">A quick view of your recent short links.</p>
+				</div>
+				<label class="relative block w-full sm:w-72">
+					<span class="sr-only">Search links</span>
+					<i class="pi pi-search pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400" aria-hidden="true"></i>
+					<input
+						type="search"
+						[value]="searchTerm"
+						(input)="searchTerm = $any($event.target).value"
+						placeholder="Search links..."
+						class="h-11 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-red-300 focus:ring-4 focus:ring-red-50">
+				</label>
+			</div>
+
+			<div class="mb-3 flex gap-2" role="group" aria-label="Filter links by status">
+				<button type="button" (click)="statusFilter = 'All'" [attr.aria-pressed]="statusFilter === 'All'" class="filter-button" [class.filter-button-active]="statusFilter === 'All'">All links</button>
+				<button type="button" (click)="statusFilter = 'Active'" [attr.aria-pressed]="statusFilter === 'Active'" class="filter-button" [class.filter-button-active]="statusFilter === 'Active'">Active</button>
+				<button type="button" (click)="statusFilter = 'Paused'" [attr.aria-pressed]="statusFilter === 'Paused'" class="filter-button" [class.filter-button-active]="statusFilter === 'Paused'">Paused</button>
+			</div>
+
+			<div class="desktop-table overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.04)]">
+				<div class="overflow-x-auto">
+					<table class="w-full min-w-[760px] border-collapse text-left">
+						<thead class="bg-slate-50/80">
+							<tr class="border-b border-slate-200 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+								<th scope="col" class="px-5 py-3.5">Link</th>
+								<th scope="col" class="px-5 py-3.5">Destination</th>
+								<th scope="col" class="px-5 py-3.5">Clicks</th>
+								<th scope="col" class="px-5 py-3.5">Created</th>
+								<th scope="col" class="px-5 py-3.5">Status</th>
+								<th scope="col" class="px-5 py-3.5"><span class="sr-only">Actions</span></th>
+							</tr>
+						</thead>
+						<tbody class="divide-y divide-slate-100">
+							@for (link of filteredLinks; track link.id) {
+								<tr class="transition hover:bg-red-50/30">
+									<td class="px-5 py-4">
+										<div class="flex items-center gap-3">
+											<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-[#d64545]"><i class="pi pi-link text-sm" aria-hidden="true"></i></span>
+											<div class="min-w-0">
+												<p class="truncate text-sm font-semibold text-slate-800">{{ link.title }}</p>
+												<p class="mt-0.5 text-xs font-medium text-[#d64545]">{{ link.shortUrl }}</p>
+											</div>
+										</div>
+									</td>
+									<td class="max-w-64 px-5 py-4"><p class="truncate text-sm text-slate-500" [title]="link.destination">{{ link.destination }}</p></td>
+									<td class="px-5 py-4 text-sm font-semibold tabular-nums text-slate-800">{{ link.clicks | number }}</td>
+									<td class="whitespace-nowrap px-5 py-4 text-sm text-slate-500">{{ link.created }}</td>
+									<td class="px-5 py-4"><span class="status-pill" [class.status-paused]="link.status === 'Paused'">{{ link.status }}</span></td>
+									<td class="px-5 py-4 text-right">
+										<button type="button" (click)="copyLink(link)" class="copy-button" [attr.aria-label]="(copiedLinkId === link.id ? 'Copied ' : 'Copy ') + link.shortUrl" [title]="copiedLinkId === link.id ? 'Copied' : 'Copy link'">
+											<i [class]="copiedLinkId === link.id ? 'pi pi-check' : 'pi pi-copy'" aria-hidden="true"></i>
+										</button>
+									</td>
+								</tr>
+							} @empty {
+								<tr><td colspan="6" class="px-5 py-12 text-center text-sm text-slate-500">No links match your search.</td></tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="mobile-link-list space-y-3">
+				@for (link of filteredLinks; track link.id) {
+					<article class="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_8px_30px_rgba(15,23,42,0.04)]">
+						<div class="flex items-start justify-between gap-3">
+							<div class="flex min-w-0 items-center gap-3">
+								<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-[#d64545]"><i class="pi pi-link text-sm" aria-hidden="true"></i></span>
+								<div class="min-w-0">
+									<h3 class="truncate text-sm font-semibold text-slate-800">{{ link.title }}</h3>
+									<p class="mt-0.5 truncate text-xs font-medium text-[#d64545]">{{ link.shortUrl }}</p>
+								</div>
+							</div>
+							<button type="button" (click)="copyLink(link)" class="copy-button shrink-0" [attr.aria-label]="(copiedLinkId === link.id ? 'Copied ' : 'Copy ') + link.shortUrl" [title]="copiedLinkId === link.id ? 'Copied' : 'Copy link'">
+								<i [class]="copiedLinkId === link.id ? 'pi pi-check' : 'pi pi-copy'" aria-hidden="true"></i>
+							</button>
+						</div>
+						<p class="mt-3 truncate text-xs text-slate-500" [title]="link.destination">{{ link.destination }}</p>
+						<div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
+							<span class="font-semibold tabular-nums text-slate-700"><i class="pi pi-chart-line mr-1.5 text-slate-400" aria-hidden="true"></i>{{ link.clicks | number }} clicks</span>
+							<span class="text-slate-400">{{ link.created }}</span>
+							<span class="status-pill" [class.status-paused]="link.status === 'Paused'">{{ link.status }}</span>
+						</div>
+					</article>
+				} @empty {
+					<p class="rounded-xl border border-slate-200 bg-white px-5 py-12 text-center text-sm text-slate-500">No links match your search.</p>
+				}
+			</div>
+		</section>
+	</main>
+</div>
