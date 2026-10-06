@@ -38,7 +38,9 @@ export class CommonNotification implements AfterViewInit, OnDestroy {
     this.messageService.add({
       severity: notification.type, 
       summary: notification.summary, 
-      detail: notification.detail});
+      detail: notification.detail,
+      sticky : notification.sticky
+      });
   }
 
   public ngOnDestroy(): void {
