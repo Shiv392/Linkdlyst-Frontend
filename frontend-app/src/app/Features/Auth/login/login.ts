@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonButton } from '../../../Shared/Components/common-button/common-button';
 import { CommonInput } from '../../../Shared/Components/common-input/common-input';
 import { LoginService } from '../Services/Login.service';
@@ -8,7 +8,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { loginApiResponse } from '../Models/login';
 import { CommonLoaderService } from '../../../Shared/Services/CommonLoaderService.service';
 import { NotificationService } from '../../../Shared/Services/Notification.service';
-import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +21,7 @@ export class Login implements OnDestroy {
   private loginService = inject(LoginService);
   private loaderService = inject(CommonLoaderService);
   private notificationService = inject(NotificationService);
-  private cookieService = inject(CookieService);
+  private router = inject(Router);
 
   readonly loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -71,6 +70,8 @@ export class Login implements OnDestroy {
         detail: response.message,
       });
       this.loaderService.hideLoader();
+      this.router.navigate(['/links'])
+      .then(()=> window.location.reload());
     })
   }
 

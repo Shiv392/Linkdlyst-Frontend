@@ -33,7 +33,18 @@ export class App implements OnInit, OnDestroy {
         }
       });
 
+      this.listenLogout();
+
       this.getUserDetails();
+  }
+
+  public listenLogout() : void{
+    this.authService.logoutSubject.pipe(takeUntil(this.subject$))
+    .subscribe(event=>{
+      if(event){
+        this.authService.isLoggedIn.set(false);
+      }
+    })
   }
 
   public getUserDetails() : void{

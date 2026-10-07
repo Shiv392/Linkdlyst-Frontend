@@ -22,6 +22,7 @@ export class CommonInput implements ControlValueAccessor {
   @Input() inputClass = '';
   @Input() ariaLabel = '';
   @Input() autocomplete?: string;
+  @Input() maxLength?: number;
 
   value = '';
   disabled = false;
