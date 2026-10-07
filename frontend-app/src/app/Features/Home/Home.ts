@@ -3,10 +3,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import { Router, RouterLink } from "@angular/router";
 import { CommonButton } from "../../Shared/Components/common-button/common-button";
 import { CommonInput } from "../../Shared/Components/common-input/common-input";
+import { UrlShortnerInput } from "../../Shared/Components/url-shortner-input/url-shortner-input";
 
 @Component({
     selector: "app-home",
-    imports: [CommonButton, CommonInput, ReactiveFormsModule, RouterLink],
+    imports: [CommonButton, CommonInput, ReactiveFormsModule, RouterLink, UrlShortnerInput],
     templateUrl: "./Home.html",
 })
 export class Home{

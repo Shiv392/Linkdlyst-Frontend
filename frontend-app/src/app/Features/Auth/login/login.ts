@@ -8,6 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { loginApiResponse } from '../Models/login';
 import { CommonLoaderService } from '../../../Shared/Services/CommonLoaderService.service';
 import { NotificationService } from '../../../Shared/Services/Notification.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class Login implements OnDestroy {
   private loginService = inject(LoginService);
   private loaderService = inject(CommonLoaderService);
   private notificationService = inject(NotificationService);
+  private cookieService = inject(CookieService);
 
   readonly loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
