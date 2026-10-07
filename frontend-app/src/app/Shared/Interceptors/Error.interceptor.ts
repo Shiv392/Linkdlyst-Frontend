@@ -23,7 +23,7 @@ export const errorInterceptor: HttpInterceptorFn = (request, next) => {
         error.message ||
         'An unknown error occurred';
 
-      notificationService.notificationSubject$.next({
+      !error.url?.includes('user-details') && notificationService.notificationSubject$.next({
         type: 'error',
         summary: 'Error',
         detail: message,
