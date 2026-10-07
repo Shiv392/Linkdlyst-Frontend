@@ -30,11 +30,35 @@
 	</nav>
 
 	<div class="flex items-center gap-1 sm:gap-3">
-		<a
-            (click) = "redirectLogin()"
-			class="cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 no-underline transition hover:bg-slate-100 sm:px-4">
-			Login
-		</a>
+		@if (!isLoggedIn()) {
+			<a
+				(click)="redirectLogin()"
+				class="cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 no-underline transition hover:bg-slate-100 sm:px-4">
+				Login
+			</a>
+		} @else {
+			<div class="group relative">
+				<button
+					type="button"
+					class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:border-red-200 hover:text-[#d64545] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-100"
+					aria-label="Open profile menu"
+					aria-haspopup="true">
+					<i class="pi pi-user text-lg" aria-hidden="true"></i>
+				</button>
+
+				<p-menu
+					[model]="profileMenuItems"
+					aria-label="Profile menu"
+					class="profile-menu invisible pointer-events-none absolute right-0 top-full z-50 w-64 opacity-0 transition duration-150 group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:opacity-100">
+					<ng-template #start>
+						<div class="border-b border-slate-100 px-4 py-3">
+							<p class="truncate text-sm font-semibold text-slate-800">{{ userName() || 'Account' }}</p>
+							<p class="mt-0.5 truncate text-xs text-slate-500">{{ userEmail() || 'No email available' }}</p>
+						</div>
+					</ng-template>
+				</p-menu>
+			</div>
+		}
 
 		@if (homeRoute.isActive) {
 			<app-common-button
