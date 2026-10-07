@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { UrlShortnerInput } from '../../Shared/Components/url-shortner-input/url-shortner-input';
 import { CommonModule } from '@angular/common';
+import { CommonNavbar } from '../../Shared/Components/common-navbar/common-navbar';
 
 type LinkStatus = 'Active' | 'Paused';
 
@@ -17,11 +17,16 @@ interface LinkItem {
 
 @Component({
   selector: 'app-links',
-  imports: [RouterLink, UrlShortnerInput, CommonModule],
+  imports: [UrlShortnerInput, CommonModule, CommonNavbar],
   templateUrl: './links.html',
   styleUrl: './links.css',
 })
 export class Links {
+  readonly navigationLinks = [
+    { label: 'Home', route: '/home' },
+    { label: 'My links', route: '/links' },
+  ];
+
   searchTerm = '';
   statusFilter: 'All' | LinkStatus = 'All';
   copiedLinkId: number | null = null;
