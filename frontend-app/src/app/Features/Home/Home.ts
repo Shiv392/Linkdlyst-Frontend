@@ -1,18 +1,20 @@
-import { Component, inject } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Router, RouterLink } from "@angular/router";
-import { CommonButton } from "../../Shared/Components/common-button/common-button";
 import { CommonInput } from "../../Shared/Components/common-input/common-input";
+import { CommonNavbar } from "../../Shared/Components/common-navbar/common-navbar";
 import { UrlShortnerInput } from "../../Shared/Components/url-shortner-input/url-shortner-input";
 
 @Component({
     selector: "app-home",
-    imports: [CommonButton, CommonInput, ReactiveFormsModule, RouterLink, UrlShortnerInput],
+    imports: [CommonInput, ReactiveFormsModule, CommonNavbar, UrlShortnerInput],
     templateUrl: "./Home.html",
 })
 export class Home{
 
-    public router = inject(Router);
+    readonly navigationLinks = [
+        { label: 'Home', route: '/home' },
+        { label: 'My links', route: '/links' },
+    ];
 
     dots = Array(15);
     readonly shortenForm = new FormGroup({
@@ -28,7 +30,4 @@ export class Home{
         // URL shortening will be connected to the API in the feature workflow.
     }
 
-    public redirectLogin(): void{
-        this.router.navigate(['/auth/login']);
-    }
 }

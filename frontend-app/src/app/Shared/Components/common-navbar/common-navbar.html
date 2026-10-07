@@ -1,0 +1,60 @@
+<header class="relative z-10 mx-auto flex h-20 max-w-7xl items-center justify-between px-5 sm:px-8">
+	<a
+		routerLink="/home"
+		routerLinkActive
+		#homeRoute="routerLinkActive"
+		[routerLinkActiveOptions]="{ exact: true }"
+		class="flex items-center gap-3 text-inherit no-underline"
+		aria-label="LinkedList home">
+		<span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d64545] text-white shadow-lg shadow-red-200">
+			<i class="pi pi-link text-lg" aria-hidden="true"></i>
+		</span>
+
+		<span>
+			<span class="block text-xl font-bold tracking-tight">Linked<span class="text-[#d64545]">List</span></span>
+			<span class="block text-[10px] font-medium uppercase tracking-[0.18em] text-slate-400">URL Intelligence</span>
+		</span>
+	</a>
+
+	<nav class="hidden items-center gap-8 md:flex" aria-label="Main navigation">
+		@for (link of links; track link.route) {
+			<a
+				[routerLink]="link.route"
+				routerLinkActive="text-[#d64545]"
+				[routerLinkActiveOptions]="{ exact: true }"
+				ariaCurrentWhenActive="page"
+				class="cursor-pointer text-sm font-medium text-slate-500 no-underline transition hover:text-[#d64545]">
+				{{ link.label }}
+			</a>
+		}
+	</nav>
+
+	<div class="flex items-center gap-1 sm:gap-3">
+		<a
+            (click) = "redirectLogin()"
+			class="cursor-pointer rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 no-underline transition hover:bg-slate-100 sm:px-4">
+			Login
+		</a>
+
+		@if (homeRoute.isActive) {
+			<app-common-button
+				label="Get Started"
+				(click)="redirectSignup()"
+				buttonClass="rounded-lg bg-[#d64545] px-3 py-2.5 text-sm font-semibold text-white shadow-md shadow-red-200 transition duration-200 hover:-translate-y-0.5 hover:bg-[#c63b3b] cursor-pointer active:translate-y-0 sm:px-5">
+			</app-common-button>
+		}
+	</div>
+</header>
+
+<nav class="mx-auto flex max-w-7xl items-center gap-6 px-5 pb-3 md:hidden" aria-label="Mobile navigation">
+	@for (link of links; track link.route) {
+		<a
+			[routerLink]="link.route"
+			routerLinkActive="text-[#d64545]"
+			[routerLinkActiveOptions]="{ exact: true }"
+			ariaCurrentWhenActive="page"
+			class="cursor-pointer text-sm font-medium text-slate-500 no-underline transition hover:text-[#d64545]">
+			{{ link.label }}
+		</a>
+	}
+</nav>
