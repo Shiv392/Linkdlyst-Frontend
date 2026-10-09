@@ -8,6 +8,7 @@ import { userDetails } from './Shared/Types/UserDetails';
 import { ConfigService } from './Shared/Services/Config.service';
 import { AuthService } from './Shared/Services/Auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,7 @@ export class App implements OnInit, OnDestroy {
   private userDetailService = inject(UserDetailsService);
   private configService = inject(ConfigService);
   private authService = inject(AuthService);
+  private cookieService = inject(CookieService);
 
   public subject$ = new Subject<void>();
 
@@ -43,6 +45,8 @@ export class App implements OnInit, OnDestroy {
     .subscribe(event=>{
       if(event){
         this.authService.isLoggedIn.set(false);
+        this.cookieService.deleteAll();
+        this
       }
     })
   }

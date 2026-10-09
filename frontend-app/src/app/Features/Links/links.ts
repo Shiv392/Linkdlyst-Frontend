@@ -1,15 +1,20 @@
-import { Component } from '@angular/core';
+import { afterNextRender, Component, inject, OnDestroy } from '@angular/core';
 import { UrlShortnerInput } from '../../Shared/Components/url-shortner-input/url-shortner-input';
 import { CommonModule } from '@angular/common';
 import { CommonNavbar } from '../../Shared/Components/common-navbar/common-navbar';
+import { LinkService } from './Services/links.service';
+import { Subject, takeUntil } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { CommonLoaderService } from '../../Shared/Services/CommonLoaderService.service';
+import { getLinksApiResponse, Link } from './Models/links.model';
 
 type LinkStatus = 'Active' | 'Paused';
 
 interface LinkItem {
   id: number;
-  title: string;
-  shortUrl: string;
-  destination: string;
+  name: string;
+  shortCode: string;
+  url: string;
   clicks: number;
   created: string;
   status: LinkStatus;
@@ -21,74 +26,69 @@ interface LinkItem {
   templateUrl: './links.html',
   styleUrl: './links.css',
 })
-export class Links {
-  readonly navigationLinks = [
-    { label: 'Home', route: '/home' },
-    { label: 'My links', route: '/links' },
-  ];
+export class Links implements OnDestroy {
 
-  searchTerm = '';
-  statusFilter: 'All' | LinkStatus = 'All';
-  copiedLinkId: number | null = null;
+  public linkService = inject(LinkService);
+  private cookieService = inject(CookieService);
+  private commonLoaderService = inject(CommonLoaderService);
 
-  readonly links: LinkItem[] = [
-    {
-      id: 1,
-      title: 'Product launch',
-      shortUrl: 'lnkd.ly/launch24',
-      destination: 'https://acme.com/blog/product-launch-2024',
-      clicks: 24892,
-      created: 'Oct 24, 2024',
-      status: 'Active',
-    },
-    {
-      id: 2,
-      title: 'LinkedIn campaign',
-      shortUrl: 'lnkd.ly/linkedin-q4',
-      destination: 'https://acme.com/campaigns/linkedin-autumn',
-      clicks: 8416,
-      created: 'Oct 18, 2024',
-      status: 'Active',
-    },
-    {
-      id: 3,
-      title: 'Customer stories',
-      shortUrl: 'lnkd.ly/customer-stories',
-      destination: 'https://acme.com/customers/success-stories',
-      clicks: 5102,
-      created: 'Oct 12, 2024',
-      status: 'Active',
-    },
-    {
-      id: 4,
-      title: 'Summer offer',
-      shortUrl: 'lnkd.ly/summer24',
-      destination: 'https://acme.com/offers/summer-sale',
-      clicks: 3279,
-      created: 'Sep 30, 2024',
-      status: 'Paused',
-    },
-  ];
-
-  get filteredLinks(): LinkItem[] {
-    const query = this.searchTerm.trim().toLowerCase();
-
-    return this.links.filter((link) => {
-      const matchesStatus = this.statusFilter === 'All' || link.status === this.statusFilter;
-      const matchesSearch = !query || [link.title, link.shortUrl, link.destination]
-        .some((value) => value.toLowerCase().includes(query));
-
-      return matchesStatus && matchesSearch;
+  constructor(){
+    afterNextRender(() => {
+      const isLoggedIn = this.cookieService.get('isLoggedIn');
+      if (isLoggedIn === 'true') this.getLinks();
     });
+  }
+
+  public searchTerm = '';
+  public statusFilter: 'All' | LinkStatus = 'All';
+  public copiedLinkId: number | null = null;
+
+  public links: LinkItem[] = [];
+  public totalCount:number = 0;
+
+  private subject$ = new Subject<void>();  
+
+  public getLinks() : void{
+    this.commonLoaderService.showLoader();
+    this.linkService.getLinks().pipe(takeUntil(this.subject$))
+    .subscribe({
+      next: (res : getLinksApiResponse)=>{
+        this.commonLoaderService.hideLoader();
+        if(res.success){
+          this.totalCount = res.data.totalCount;
+          
+          res.data.data.forEach((data: Link)=>{
+            this.links.push({
+              name : data.name,
+              id : data.id,
+              shortCode : data.shortCode,
+              status : 'Active',
+              clicks : 0,
+              created : data.createdAt,
+              url : data.url
+            })
+          })
+        }
+      },
+      error: ()=>{
+        this.links = [];
+        this.commonLoaderService.hideLoader();
+      }
+    })
   }
 
   async copyLink(link: LinkItem): Promise<void> {
     if (!navigator.clipboard) return;
 
-    await navigator.clipboard.writeText(`https://${link.shortUrl}`);
+    await navigator.clipboard.writeText(`https://${link.shortCode}`);
     this.copiedLinkId = link.id;
     setTimeout(() => {
       if (this.copiedLinkId === link.id) this.copiedLinkId = null;
     }, 1800);
+  }
+
+  public ngOnDestroy(): void {
+      this.subject$.next();
+      this.subject$.complete();
   }
 }
