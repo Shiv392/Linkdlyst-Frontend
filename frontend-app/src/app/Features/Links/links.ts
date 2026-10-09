@@ -7,6 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonLoaderService } from '../../Shared/Services/CommonLoaderService.service';
 import { getLinksApiResponse, Link } from './Models/links.model';
+import { CommonPaginator } from '../../Shared/Components/common-paginator/common-paginator';
 
 type LinkStatus = 'Active' | 'Paused';
 
@@ -22,7 +23,7 @@ interface LinkItem {
 
 @Component({
   selector: 'app-links',
-  imports: [UrlShortnerInput, CommonModule, CommonNavbar],
+  imports: [UrlShortnerInput, CommonModule, CommonNavbar, CommonPaginator],
   templateUrl: './links.html',
   styleUrl: './links.css',
 })
@@ -56,7 +57,7 @@ export class Links implements OnDestroy {
         this.commonLoaderService.hideLoader();
         if(res.success){
           this.totalCount = res.data.totalCount;
-          
+
           res.data.data.forEach((data: Link)=>{
             this.links.push({
               name : data.name,
