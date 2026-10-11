@@ -9,8 +9,20 @@ export const routes: Routes = [
         path : "home", loadComponent : () => import('./Features/Home/Home').then(m => m.Home)
     },
     {
-        path : "links",
-        loadComponent : () => import('./Features/Links/links').then(m => m.Links)
+        path : "app",
+        loadComponent : () => import("./Features/Links/layout/layout").then(m=> m.Layout),
+        children : [
+            {
+                path : '',
+                redirectTo : 'link',
+                pathMatch : "full"
+            },
+            {
+                path : "link",
+                pathMatch : 'full',
+                loadComponent : ()=> import("./Features/Links/links").then(m=> m.Links)
+            }
+        ]
     },
     {
         path : "auth", loadChildren : () => import('./Features/Auth/Auth.routes').then(m => m.AuthRoutes)

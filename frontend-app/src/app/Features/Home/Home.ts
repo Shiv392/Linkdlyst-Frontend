@@ -13,7 +13,7 @@ export class Home{
 
     readonly navigationLinks = [
         { label: 'Home', route: '/home' },
-        { label: 'My links', route: '/links' },
+        { label: 'My links', route: '/app' },
     ];
 
     dots = Array(15);

@@ -73,7 +73,7 @@ export class UrlShortnerInput {
           }
           }))
           
-          this.router.navigate(['/links']);
+          this.router.navigate(['/app']);
         }
     }
 }

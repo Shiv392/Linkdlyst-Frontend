@@ -11,6 +11,7 @@ import { CommonPaginator } from '../../Shared/Components/common-paginator/common
 import { PageChangeEvent } from '../../Shared/Types/Shared.type';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
+import { SideBar } from './side-bar/side-bar';
 
 type LinkStatus = 'Active' | 'Paused';
 
@@ -26,7 +27,7 @@ interface LinkItem {
 
 @Component({
   selector: 'app-links',
-  imports: [UrlShortnerInput, CommonModule, CommonNavbar, CommonPaginator, TableModule, SkeletonModule],
+  imports: [UrlShortnerInput, CommonModule, CommonNavbar, CommonPaginator, TableModule, SkeletonModule, SideBar],
   templateUrl: './links.html',
   styleUrl: './links.css',
 })
@@ -53,6 +54,18 @@ export class Links implements OnDestroy, OnInit {
 
   public links: LinkItem[] = [];
   public totalCount: number = 0;
+
+  public get visibleLinks(): LinkItem[] {
+    const query = this.searchTerm.trim().toLowerCase();
+
+    return this.links.filter(link => {
+      const matchesStatus = this.statusFilter === 'All' || link.status === this.statusFilter;
+      const matchesSearch = !query || [link.name, link.shortCode, link.url]
+        .some(value => value.toLowerCase().includes(query));
+
+      return matchesStatus && matchesSearch;
+    });
+  }
 
   private subject$ = new Subject<void>();
 

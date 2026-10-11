@@ -61,6 +61,6 @@ export class LinkService {
 
     public readonly navigationLinks = signal<any>([
         { label: 'Home', route: '/home' },
-        { label: 'My links', route: '/links' }
+        { label: 'My links', route: '/app' }
     ])
 }
