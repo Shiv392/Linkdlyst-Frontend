@@ -4,11 +4,12 @@ import { MenuItem } from 'primeng/api';
 import { PanelMenu } from 'primeng/panelmenu';
 import { AuthService } from '../../../Shared/Services/Auth.service';
 import { ConfigService } from '../../../Shared/Services/Config.service';
-import {Router} from '@angular/router'
+import {Router} from '@angular/router';
+import { Menu } from 'primeng/menu';
 
 @Component({
   selector: 'app-side-bar',
-  imports: [PanelMenu],
+  imports: [PanelMenu, Menu],
   templateUrl: './side-bar.html',
   styleUrl: './side-bar.css',
 })
