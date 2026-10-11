@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
-import { catchError, Observable, throwError } from "rxjs";
+import { BehaviorSubject, catchError, Observable, Subject, throwError } from "rxjs";
 import { addLinkApiBody, editLinkApiBody, getLinksApiResponse } from "../Models/links.model";
 import { environment } from "../../../Environments/environment";
 import { Controller } from "../../../Controllers/Controller";
@@ -13,10 +13,12 @@ export class LinkService {
     private http = inject(HttpClient);
     private controller = inject(Controller);
 
-    public getLinks(): Observable<getLinksApiResponse> {
+    public reloadApiSubject  = new BehaviorSubject<boolean>(false);
+
+    public getLinks(apibody : any): Observable<getLinksApiResponse> {
         const url = environment.baseURL + this.controller.linkEndPoint;
 
-        return this.http.get<getLinksApiResponse>(url)
+        return this.http.get<getLinksApiResponse>(url, {params : apibody})
             .pipe(
                 catchError((error: HttpErrorResponse) => {
                     return throwError(() => error.error)
@@ -59,6 +61,6 @@ export class LinkService {
 
     public readonly navigationLinks = signal<any>([
         { label: 'Home', route: '/home' },
-        { label: 'My links', route: '/links' }
+        { label: 'My links', route: '/app' }
     ])
 }

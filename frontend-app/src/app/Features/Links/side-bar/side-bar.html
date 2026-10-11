@@ -1,0 +1,56 @@
+
+<aside class="sidebar-shell" aria-label="Workspace navigation">
+  <div class="sidebar-header">
+    <p class="sidebar-label">Linkdlyst</p>
+
+    <div class="profile-actions flex items-center gap-1 sm:gap-3">
+      @if (!isLoggedIn()) {
+        <a
+          (click)="redirectLogin()"
+          class="cursor-pointer rounded-lg px-2 py-2 text-sm font-semibold text-slate-600 no-underline transition hover:bg-slate-100">
+          Login
+        </a>
+      } 
+      @else {
+
+
+<div class="relative">
+  <button
+    type="button"
+    (click)="menu.toggle($event)"
+    class="flex cursor-pointer h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 hover:border-red-200 hover:text-[#d64545]"
+    aria-label="Open profile menu"
+  >
+    <i class="pi pi-user text-lg"></i>
+  </button>
+
+  <p-menu
+    #menu
+    [model]="profileMenuItems"
+    [popup]="true"
+    appendTo="body"
+    styleClass="profile-menu"
+  >
+    <ng-template #start>
+      <div class="border-b border-slate-100 px-4 py-3">
+        <p class="truncate text-sm font-semibold text-slate-800">
+          {{ userName() || 'Account' }}
+        </p>
+        <p class="truncate text-xs text-slate-500">
+          {{ userEmail() || 'No email available' }}
+        </p>
+      </div>
+    </ng-template>
+  </p-menu>
+</div>
+
+      }
+    </div>
+  </div>
+
+  <p-panelmenu
+    [model]="menuItems"
+    [multiple]="true"
+    styleClass="sidebar-menu">
+  </p-panelmenu>
+</aside>
