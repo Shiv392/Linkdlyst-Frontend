@@ -1,4 +1,4 @@
-import { afterNextRender, Component, inject, OnDestroy } from '@angular/core';
+import { afterNextRender, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { UrlShortnerInput } from '../../Shared/Components/url-shortner-input/url-shortner-input';
 import { CommonModule } from '@angular/common';
 import { CommonNavbar } from '../../Shared/Components/common-navbar/common-navbar';
@@ -8,6 +8,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { CommonLoaderService } from '../../Shared/Services/CommonLoaderService.service';
 import { getLinksApiResponse, Link } from './Models/links.model';
 import { CommonPaginator } from '../../Shared/Components/common-paginator/common-paginator';
+import { PageChangeEvent } from '../../Shared/Types/Shared.type';
+import { TableModule } from 'primeng/table';
+import { SkeletonModule } from 'primeng/skeleton';
 
 type LinkStatus = 'Active' | 'Paused';
 
@@ -23,21 +26,25 @@ interface LinkItem {
 
 @Component({
   selector: 'app-links',
-  imports: [UrlShortnerInput, CommonModule, CommonNavbar, CommonPaginator],
+  imports: [UrlShortnerInput, CommonModule, CommonNavbar, CommonPaginator, TableModule, SkeletonModule],
   templateUrl: './links.html',
   styleUrl: './links.css',
 })
-export class Links implements OnDestroy {
+export class Links implements OnDestroy, OnInit {
 
   public linkService = inject(LinkService);
   private cookieService = inject(CookieService);
   private commonLoaderService = inject(CommonLoaderService);
 
-  constructor(){
-    afterNextRender(() => {
-      const isLoggedIn = this.cookieService.get('isLoggedIn');
-      if (isLoggedIn === 'true') this.getLinks();
-    });
+  ngOnInit(): void {
+    const isLoggedIn = this.cookieService.get('isLoggedIn');
+    console.log("is logged in ..........", isLoggedIn);
+
+    if (isLoggedIn == 'true') {
+      this.getLinks();
+    }
+
+    this.reloadLinkApi();
   }
 
   public searchTerm = '';
@@ -45,37 +52,64 @@ export class Links implements OnDestroy {
   public copiedLinkId: number | null = null;
 
   public links: LinkItem[] = [];
-  public totalCount:number = 0;
+  public totalCount: number = 0;
 
-  private subject$ = new Subject<void>();  
+  private subject$ = new Subject<void>();
 
-  public getLinks() : void{
-    this.commonLoaderService.showLoader();
-    this.linkService.getLinks().pipe(takeUntil(this.subject$))
-    .subscribe({
-      next: (res : getLinksApiResponse)=>{
-        this.commonLoaderService.hideLoader();
-        if(res.success){
-          this.totalCount = res.data.totalCount;
+  private page: number = 1;
+  private limit: number = 10;
 
-          res.data.data.forEach((data: Link)=>{
-            this.links.push({
-              name : data.name,
-              id : data.id,
-              shortCode : data.shortCode,
-              status : 'Active',
-              clicks : 0,
-              created : data.createdAt,
-              url : data.url
+  public isLoading: boolean = false;
+  public skeletonRows = Array.from({ length: 5 });
+
+
+  public getLinks(): void {
+    const apibody = {
+      "offset": this.page - 1,
+      "limit": this.limit
+    }
+    this.linkService.getLinks(apibody).pipe(takeUntil(this.subject$))
+      .subscribe({
+        next: (res: getLinksApiResponse) => {
+          this.commonLoaderService.hideLoader();
+          this.isLoading = false;
+          if (res.success) {
+            this.totalCount = res.data?.totalCount;
+
+            console.log("Total count: " + this.totalCount);
+
+            res?.data?.data?.forEach((data: Link) => {
+              this.links.push({
+                name: data.name,
+                id: data.id,
+                shortCode: data.shortCode,
+                status: 'Active',
+                clicks: 0,
+                created: data.createdAt,
+                url: data.url
+              })
             })
-          })
+          }
+        },
+        error: () => {
+          this.links = [];
+          this.commonLoaderService.hideLoader();
+          this.isLoading = false;
         }
-      },
-      error: ()=>{
-        this.links = [];
-        this.commonLoaderService.hideLoader();
-      }
-    })
+      })
+  }
+
+  public reloadLinkApi(): void {
+    this.linkService.reloadApiSubject.pipe(takeUntil(this.subject$))
+      .subscribe(event => {
+        if (event) {
+          this.page = 1;
+          this.limit = 10;
+
+          this.isLoading = true;
+          this.getLinks();
+        }
+      })
   }
 
   async copyLink(link: LinkItem): Promise<void> {
@@ -83,13 +117,14 @@ export class Links implements OnDestroy {
 
     await navigator.clipboard.writeText(`https://${link.shortCode}`);
     this.copiedLinkId = link.id;
-    setTimeout(() => {
-      if (this.copiedLinkId === link.id) this.copiedLinkId = null;
-    }, 1800);
+  }
+
+  public paginatorEvent(event: PageChangeEvent): void {
+    console.log("Shiv Soni.....................", event)
   }
 
   public ngOnDestroy(): void {
-      this.subject$.next();
-      this.subject$.complete();
+    this.subject$.next();
+    this.subject$.complete();
   }
 }

@@ -1,3 +1,5 @@
-        <div class="flex justify-center">
-            <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="120" [rowsPerPageOptions]="[10, 20, 30]" />
-        </div>
+<p-paginator (onPageChange)="onPageChange($event)" 
+[first]="first" [rows]="rows"
+[totalRecords]="totalCount"
+[rowsPerPageOptions]="[10, 50, 100]" 
+/>

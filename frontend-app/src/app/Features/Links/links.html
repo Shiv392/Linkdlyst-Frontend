@@ -3,17 +3,20 @@
 
 	<main class="relative z-10 mx-auto max-w-7xl px-5 pb-16 pt-7 sm:px-8 sm:pt-10">
 		<section class="links-intro">
-			<div class="mb-3 inline-flex items-center gap-2 rounded-full border border-red-100 bg-red-50 px-3 py-1.5 text-xs font-semibold text-[#d64545]">
+			<div
+				class="mb-3 inline-flex items-center gap-2 rounded-full border border-red-100 bg-red-50 px-3 py-1.5 text-xs font-semibold text-[#d64545]">
 				<i class="pi pi-sparkles" aria-hidden="true"></i>
 				Your workspace
 			</div>
 			<div class="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
 				<div>
 					<h1 class="text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">Your links</h1>
-					<p class="mt-2 max-w-xl text-sm leading-6 text-slate-500">Create, organize, and keep an eye on every link you share.</p>
+					<p class="mt-2 max-w-xl text-sm leading-6 text-slate-500">Create, organize, and keep an eye on every
+						link you share.</p>
 				</div>
 				<div class="flex items-center gap-2 text-sm text-slate-500">
-					<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#d64545] shadow-sm ring-1 ring-slate-200">
+					<span
+						class="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-[#d64545] shadow-sm ring-1 ring-slate-200">
 						<i class="pi pi-chart-line" aria-hidden="true"></i>
 					</span>
 					<span><strong class="font-bold text-slate-900">41,689</strong> total clicks</span>
@@ -21,9 +24,12 @@
 			</div>
 		</section>
 
-		<section class="mt-8 rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-[0_12px_40px_rgba(15,23,42,0.05)] sm:px-6" aria-labelledby="shorten-heading">
+		<section
+			class="mt-8 rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-[0_12px_40px_rgba(15,23,42,0.05)] sm:px-6"
+			aria-labelledby="shorten-heading">
 			<div class="mb-1 flex items-center gap-2">
-				<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50 text-[#d64545]"><i class="pi pi-bolt" aria-hidden="true"></i></span>
+				<span class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-50 text-[#d64545]"><i
+						class="pi pi-bolt" aria-hidden="true"></i></span>
 				<h2 id="shorten-heading" class="text-base font-bold text-slate-900">Shorten a new link</h2>
 			</div>
 			<app-url-shortner-input></app-url-shortner-input>
@@ -32,100 +38,243 @@
 		<section class="mt-9" aria-labelledby="links-heading">
 			<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
 				<div>
-					<h2 id="links-heading" class="text-xl font-bold tracking-tight text-slate-900">All links <span class="ml-1 text-sm font-medium text-slate-400">{{ this.totalCount }}</span></h2>
+					<h2 id="links-heading" class="text-xl font-bold tracking-tight text-slate-900">All links <span
+							class="ml-1 text-sm font-medium text-slate-400">{{ this.totalCount }}</span></h2>
 					<p class="mt-1 text-sm text-slate-500">A quick view of your recent short links.</p>
 				</div>
 				<label class="relative block w-full sm:w-72">
 					<span class="sr-only">Search links</span>
-					<i class="pi pi-search pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400" aria-hidden="true"></i>
-					<input
-						type="search"
-						[value]="searchTerm"
-						(input)="searchTerm = $any($event.target).value"
+					<i class="pi pi-search pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400"
+						aria-hidden="true"></i>
+					<input type="search" [value]="searchTerm" (input)="searchTerm = $any($event.target).value"
 						placeholder="Search links..."
 						class="h-11 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-red-300 focus:ring-4 focus:ring-red-50">
 				</label>
 			</div>
 
-			<div class="mb-3 flex gap-2" role="group" aria-label="Filter links by status">
-				<button type="button" (click)="statusFilter = 'All'" [attr.aria-pressed]="statusFilter === 'All'" class="filter-button" [class.filter-button-active]="statusFilter === 'All'">All links</button>
-				<button type="button" (click)="statusFilter = 'Active'" [attr.aria-pressed]="statusFilter === 'Active'" class="filter-button" [class.filter-button-active]="statusFilter === 'Active'">Active</button>
-				<button type="button" (click)="statusFilter = 'Paused'" [attr.aria-pressed]="statusFilter === 'Paused'" class="filter-button" [class.filter-button-active]="statusFilter === 'Paused'">Paused</button>
-			</div>
 
-			<div class="desktop-table overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.04)]">
-				<div class="overflow-x-auto">
-					<table class="w-full min-w-[760px] border-collapse text-left">
-						<thead class="bg-slate-50/80">
-							<tr class="border-b border-slate-200 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-								<th scope="col" class="px-5 py-3.5">Link</th>
-								<th scope="col" class="px-5 py-3.5">Destination</th>
-								<th scope="col" class="px-5 py-3.5">Clicks</th>
-								<th scope="col" class="px-5 py-3.5">Created</th>
-								<th scope="col" class="px-5 py-3.5">Status</th>
-								<th scope="col" class="px-5 py-3.5"><span class="sr-only">Actions</span></th>
-							</tr>
-						</thead>
-						<tbody class="divide-y divide-slate-100">
-							@for (link of links; track link.id) {
-								<tr class="transition hover:bg-red-50/30">
-									<td class="px-5 py-4">
-										<div class="flex items-center gap-3">
-											<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-[#d64545]"><i class="pi pi-link text-sm" aria-hidden="true"></i></span>
-											<div class="min-w-0">
-												<p class="truncate text-sm font-semibold text-slate-800">{{ link.name }}</p>
-												<p class="mt-0.5 text-xs font-medium text-[#d64545]">{{ link.shortCode }}</p>
+
+			<div class="main-table-container">
+
+				<!-- LOADING SKELETON -->
+				<ng-container *ngIf="isLoading; else actualTable">
+
+					<!-- Top header skeleton -->
+					<div class="mb-3 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+
+						<!-- Status filters -->
+						<div class="flex flex-wrap items-center gap-2">
+							<p-skeleton width="85px" height="36px" borderRadius="8px"></p-skeleton>
+							<p-skeleton width="65px" height="36px" borderRadius="8px"></p-skeleton>
+							<p-skeleton width="70px" height="36px" borderRadius="8px"></p-skeleton>
+						</div>
+
+						<!-- Paginator placeholder -->
+						<div class="flex items-center justify-end gap-2">
+							<p-skeleton width="90px" height="16px"></p-skeleton>
+							<p-skeleton width="32px" height="32px" borderRadius="6px"></p-skeleton>
+							<p-skeleton width="32px" height="32px" borderRadius="6px"></p-skeleton>
+							<p-skeleton width="32px" height="32px" borderRadius="6px"></p-skeleton>
+						</div>
+					</div>
+
+					<!-- Table skeleton -->
+					<div
+						class="desktop-table overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.04)]">
+
+						<div class="overflow-x-auto">
+							<table class="w-full border-collapse text-left" style="min-width: 760px">
+
+								<!-- Header -->
+								<thead>
+									<tr
+										class="border-b border-slate-200 bg-slate-50/80 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+
+										<th class="px-5 py-3.5">Link</th>
+										<th class="px-5 py-3.5">Destination</th>
+										<th class="px-5 py-3.5">Clicks</th>
+										<th class="px-5 py-3.5">Created</th>
+										<th class="px-5 py-3.5">Status</th>
+										<th class="px-5 py-3.5"></th>
+
+									</tr>
+								</thead>
+
+								<!-- Skeleton rows -->
+								<tbody>
+									<tr *ngFor="let row of skeletonRows" class="border-b border-slate-100">
+										<!-- Link -->
+										<td class="px-5 py-4">
+											<div class="flex items-center gap-3">
+												<p-skeleton width="36px" height="36px" borderRadius="8px" />
+
+												<div class="flex flex-1 flex-col gap-2">
+													<p-skeleton width="110px" height="13px" />
+													<p-skeleton width="75px" height="11px" />
+												</div>
 											</div>
-										</div>
-									</td>
-									<td class="max-w-64 px-5 py-4"><p class="truncate text-sm text-slate-500" [name]="link.url">{{ link.url }}</p></td>
-									<td class="px-5 py-4 text-sm font-semibold tabular-nums text-slate-800">{{ link?.clicks || '0' }}</td>
-									<td class="whitespace-nowrap px-5 py-4 text-sm text-slate-500">{{ link.created }}</td>
-									<td class="px-5 py-4"><span class="status-pill" [class.status-paused]="link.status === 'Paused'">{{ link.status }}</span></td>
-									<td class="px-5 py-4 text-right">
-										<button type="button" (click)="copyLink(link)" class="copy-button" [attr.aria-label]="(copiedLinkId === link.id ? 'Copied ' : 'Copy ') + link.shortCode" [name]="copiedLinkId === link.id ? 'Copied' : 'Copy link'">
-											<i [class]="copiedLinkId === link.id ? 'pi pi-check' : 'pi pi-copy'" aria-hidden="true"></i>
-										</button>
-									</td>
-								</tr>
-							} @empty {
-								<tr><td colspan="6" class="px-5 py-12 text-center text-sm text-slate-500">No links match your search.</td></tr>
-							}
-						</tbody>
+										</td>
 
-						<tfoot>
-							<app-common-paginator></app-common-paginator>
-						</tfoot>
-					</table>
-				</div>
-			</div>
+										<!-- Destination -->
+										<td class="px-5 py-4">
+											<p-skeleton width="180px" height="13px" />
+										</td>
 
-			<div class="mobile-link-list space-y-3">
-				@for (link of links; track link.id) {
-					<article class="rounded-xl border border-slate-200 bg-white p-4 shadow-[0_8px_30px_rgba(15,23,42,0.04)]">
-						<div class="flex items-start justify-between gap-3">
-							<div class="flex min-w-0 items-center gap-3">
-								<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-[#d64545]"><i class="pi pi-link text-sm" aria-hidden="true"></i></span>
-								<div class="min-w-0">
-									<h3 class="truncate text-sm font-semibold text-slate-800">{{ link.name }}</h3>
-									<p class="mt-0.5 truncate text-xs font-medium text-[#d64545]">{{ link.shortCode }}</p>
-								</div>
-							</div>
-							<button type="button" (click)="copyLink(link)" class="copy-button shrink-0" [attr.aria-label]="(copiedLinkId === link.id ? 'Copied ' : 'Copy ') + link.shortCode" [name]="copiedLinkId === link.id ? 'Copied' : 'Copy link'">
-								<i [class]="copiedLinkId === link.id ? 'pi pi-check' : 'pi pi-copy'" aria-hidden="true"></i>
+										<!-- Clicks -->
+										<td class="px-5 py-4">
+											<p-skeleton width="30px" height="13px" />
+										</td>
+
+										<!-- Created -->
+										<td class="px-5 py-4">
+											<p-skeleton width="85px" height="13px" />
+										</td>
+
+										<!-- Status -->
+										<td class="px-5 py-4">
+											<p-skeleton width="65px" height="25px" borderRadius="999px" />
+										</td>
+
+										<!-- Action -->
+										<td class="px-5 py-4 text-right">
+											<p-skeleton width="34px" height="34px" borderRadius="8px" />
+										</td>
+									</tr>
+								</tbody>
+
+							</table>
+						</div>
+					</div>
+
+				</ng-container>
+
+				<!-- ACTUAL TABLE -->
+				<ng-template #actualTable>
+
+					<!-- Header -->
+					<div class="mb-3 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+
+						<div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter links by status">
+
+							<button type="button" (click)="statusFilter = 'All'"
+								[attr.aria-pressed]="statusFilter === 'All'" class="filter-button"
+								[class.filter-button-active]="statusFilter === 'All'">
+								All links
+							</button>
+
+							<button type="button" (click)="statusFilter = 'Active'"
+								[attr.aria-pressed]="statusFilter === 'Active'" class="filter-button"
+								[class.filter-button-active]="statusFilter === 'Active'">
+								Active
+							</button>
+
+							<button type="button" (click)="statusFilter = 'Paused'"
+								[attr.aria-pressed]="statusFilter === 'Paused'" class="filter-button"
+								[class.filter-button-active]="statusFilter === 'Paused'">
+								Paused
 							</button>
 						</div>
-						<p class="mt-3 truncate text-xs text-slate-500" [name]="link.url">{{ link.url }}</p>
-						<div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
-							<span class="font-semibold tabular-nums text-slate-700"><i class="pi pi-chart-line mr-1.5 text-slate-400" aria-hidden="true"></i>{{ link.clicks }} clicks</span>
-							<span class="text-slate-400">{{ link.created }}</span>
-							<span class="status-pill" [class.status-paused]="link.status === 'Paused'">{{ link.status }}</span>
+
+						<div *ngIf="totalCount > 0" class="flex justify-end">
+							<app-common-paginator [totalCount]="totalCount"
+								(pageChangeEmitter)="paginatorEvent($event)">
+							</app-common-paginator>
 						</div>
-					</article>
-				} @empty {
-					<p class="rounded-xl border border-slate-200 bg-white px-5 py-12 text-center text-sm text-slate-500">No links match your search.</p>
-				}
+					</div>
+
+					<!-- Actual table -->
+					<div
+						class="desktop-table overflow-hidden rounded-xl border border-slate-200 bg-white shadow-[0_8px_30px_rgba(15,23,42,0.04)]">
+
+						<div class="overflow-x-auto">
+							<p-table [value]="links" dataKey="id" [tableStyle]="{ 'min-width': '760px' }"
+								styleClass="w-full border-collapse text-left" [rowHover]="true" [stripedRows]="false"
+								[showGridlines]="false" [breakpoint]="'768px'">
+
+								<ng-template #header>
+									<tr
+										class="border-b border-slate-200 bg-slate-50/80 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+										<th scope="col" class="px-5 py-3.5">Link</th>
+										<th scope="col" class="px-5 py-3.5">Destination</th>
+										<th scope="col" class="px-5 py-3.5">Clicks</th>
+										<th scope="col" class="px-5 py-3.5">Created</th>
+										<th scope="col" class="px-5 py-3.5">Status</th>
+										<th scope="col" class="px-5 py-3.5">
+											<span class="sr-only">Actions</span>
+										</th>
+									</tr>
+								</ng-template>
+
+								<ng-template #body let-link>
+									<tr class="border-b border-slate-100 transition hover:bg-red-50/30">
+
+										<td class="px-5 py-4">
+											<div class="flex items-center gap-3">
+												<span
+													class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-[#d64545]">
+													<i class="pi pi-link text-sm" aria-hidden="true"></i>
+												</span>
+
+												<div class="min-w-0">
+													<p class="truncate text-sm font-semibold text-slate-800">
+														{{ link.name }}
+													</p>
+													<p class="mt-0.5 text-xs font-medium text-[#d64545]">
+														{{ link.shortCode }}
+													</p>
+												</div>
+											</div>
+										</td>
+
+										<td class="max-w-64 px-5 py-4">
+											<p class="truncate text-sm text-slate-500" [title]="link.url">
+												{{ link.url }}
+											</p>
+										</td>
+
+										<td class="px-5 py-4 text-sm font-semibold tabular-nums text-slate-800">
+											{{ link.clicks ?? 0 }}
+										</td>
+
+										<td class="whitespace-nowrap px-5 py-4 text-sm text-slate-500">
+											{{ link.created }}
+										</td>
+
+										<td class="px-5 py-4">
+											<span class="status-pill" [class.status-paused]="link.status === 'Paused'">
+												{{ link.status }}
+											</span>
+										</td>
+
+										<td class="px-5 py-4 text-right">
+											<button type="button" (click)="copyLink(link)" class="copy-button"
+												[attr.aria-label]="(copiedLinkId === link.id ? 'Copied ' : 'Copy ') + link.shortCode"
+												[title]="copiedLinkId === link.id ? 'Copied' : 'Copy link'">
+
+												<i [class]="copiedLinkId === link.id ? 'pi pi-check' : 'pi pi-copy'"
+													aria-hidden="true">
+												</i>
+											</button>
+										</td>
+									</tr>
+								</ng-template>
+
+								<ng-template #emptymessage>
+									<tr>
+										<td colspan="6" class="px-5 py-12 text-center text-sm text-slate-500">
+											No links match your search.
+										</td>
+									</tr>
+								</ng-template>
+
+							</p-table>
+						</div>
+					</div>
+
+				</ng-template>
 			</div>
+
+
 		</section>
 	</main>
 </div>
