@@ -77,7 +77,7 @@ export class Login implements OnDestroy {
 
       this.cookieService.set("isLoggedIn", "true", expiryDate)
       this.loaderService.hideLoader();
-      this.router.navigate(['/links'])
+      this.router.navigate(['/app'])
       .then(()=> window.location.reload());
     })
   }
