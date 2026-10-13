@@ -21,6 +21,15 @@ export const routes: Routes = [
                 path : "link",
                 pathMatch : 'full',
                 loadComponent : ()=> import("./Features/Links/links").then(m=> m.Links)
+            },
+            {
+                path : 'user-profile',
+                pathMatch : 'full',
+                loadComponent: ()=> import("./Features/profile/profile").then(m=> m.Profile)
+            },{
+                path : 'subscrtiptions-and-plans',
+                pathMatch : 'full',
+                loadComponent : ()=> import("./Features/plans/plans").then(m=> m.Plans)
             }
         ]
     },
